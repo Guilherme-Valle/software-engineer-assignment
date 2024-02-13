@@ -6,13 +6,14 @@ use App\Models\Candidate;
 use App\Models\Disposition;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CandidateController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
 	 */
-	public function index()
+	public function index(Request $request)
 	{
 		$candidates = Candidate::join(
 			'dispositions as dp',
@@ -20,6 +21,15 @@ class CandidateController extends Controller
 			'=',
 			'candidates.id'
 		)
+			->select(
+				'candidates.*',
+				'dp.id as disposition_id',
+				'dp.disposition',
+				'dp.hire_type',
+				'dp.fee',
+				'dp.currency',
+				'dp.rejection_reason'
+			)
 			->paginate(15);
 
 		return response($candidates, 200);
@@ -31,6 +41,8 @@ class CandidateController extends Controller
 	public function store(Request $request)
 	{
 		try {
+			DB::beginTransaction();
+
 			$request->validate([
 				'name' => 'required',
 				'email' => 'required'
@@ -42,8 +54,11 @@ class CandidateController extends Controller
 				'candidate_id' => $candidate->id
 			]);
 
+			DB::commit();
+
 			return response(true, 200);
 		} catch (Exception $e) {
+			DB::rollBack();
 			return response(['message' => $e->getMessage()], 500);
 		}
 	}
@@ -53,7 +68,12 @@ class CandidateController extends Controller
 	 */
 	public function show(string $id)
 	{
-		//
+		try {
+			$candidate = Candidate::find($id);
+			return response($candidate, 200);
+		} catch (Exception $e) {
+			return response(['message' => $e->getMessage()], 400);
+		}
 	}
 
 	/**
@@ -61,7 +81,23 @@ class CandidateController extends Controller
 	 */
 	public function update(Request $request, string $id)
 	{
-		//
+		try {
+			Candidate::where('id', '=', $id)
+				->update([
+					'name' => $request->input('name'),
+					'email' => $request->input('email'),
+					'phone' => $request->input('phone')
+				]);
+
+			return response(true, 200);
+		} catch (Exception $e) {
+			return response(
+				[
+					'message' => $e->getMessage()
+				],
+				500
+			);
+		}
 	}
 
 	/**
@@ -69,6 +105,16 @@ class CandidateController extends Controller
 	 */
 	public function destroy(string $id)
 	{
-		//
+		try {
+			Candidate::where('id', '=', $id)
+				->delete();
+
+			return response(true, 200);
+		} catch (Exception $e) {
+			return response(
+				['message' => $e->getMessage()],
+				500
+			);
+		}
 	}
 }

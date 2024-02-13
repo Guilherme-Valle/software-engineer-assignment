@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\DispositionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::resource('candidate', CandidateController::class);
+Route::resource('disposition', DispositionController::class);
 
