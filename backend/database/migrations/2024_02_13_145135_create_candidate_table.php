@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('candidates', function (Blueprint $table) {
+            Schema::dropIfExists('candidates');
             $table->id();
             $table->text('name');
             $table->text('email');

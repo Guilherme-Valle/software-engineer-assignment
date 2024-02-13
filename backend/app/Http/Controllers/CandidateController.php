@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidate;
+use App\Models\Disposition;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,13 @@ class CandidateController extends Controller
 	 */
 	public function index()
 	{
-		$candidates = Candidate::paginate(15);
+		$candidates = Candidate::join(
+			'dispositions as dp',
+			'dp.candidate_id',
+			'=',
+			'candidates.id'
+		)
+			->paginate(15);
 
 		return response($candidates, 200);
 	}
@@ -29,8 +36,12 @@ class CandidateController extends Controller
 				'email' => 'required'
 			]);
 
-			Candidate::create($request->all());
-			
+			$candidate = Candidate::create($request->all());
+			Disposition::create([
+				'disposition' => 'undecided',
+				'candidate_id' => $candidate->id
+			]);
+
 			return response(true, 200);
 		} catch (Exception $e) {
 			return response(['message' => $e->getMessage()], 500);
