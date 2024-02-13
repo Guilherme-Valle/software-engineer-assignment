@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('disposition', function (Blueprint $table) {
+        Schema::create('dispositions', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Candidate::class);
             $table->enum('disposition', ['undecided', 'hired', 'rejected']);
