@@ -1,18 +1,18 @@
 import './App.css';
 import ContentCard from './components/ContentCard';
 import CandidatesList from './components/CandidatesList';
+import CandidatesHeader from './components/PageHeader';
+import { Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import Candidate from './pages/Candidate';
 
 function App() {
   return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', padding: "10px",
-      backgroundColor: 'whitesmoke', minHeight: '100vh'
-    }}>
-      <h3>Candidate list</h3>
-      <ContentCard>
-        <CandidatesList />
-      </ContentCard>
-    </div>
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path='/create-candidate' element={<Candidate />} />
+      <Route path='*' element={<Home />} />
+    </Routes>
   );
 }
 
