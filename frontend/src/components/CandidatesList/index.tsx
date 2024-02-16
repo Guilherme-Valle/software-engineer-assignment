@@ -1,6 +1,7 @@
 import { EllipsisOutlined } from "@ant-design/icons";
 import { Dropdown, MenuProps, Table, TableColumnsType, TableProps } from "antd";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function CandidatesList() {
   interface DataType {
@@ -15,6 +16,8 @@ export default function CandidatesList() {
   }
 
   const [selectedRow, setSelectedRow] = useState<DataType | null>(null);
+
+  const [candidates, setCandidates] = useState([]);
 
   const data = [
     {
@@ -97,10 +100,20 @@ export default function CandidatesList() {
     alert(`${key} para ${selectedRow?.id}`);
   }
 
+  const getCandidates = async() => {
+    const candidatesResponse = await axios.get('http://localhost/api/candidate/');
+    const candidatesData = candidatesResponse.data;
+    setCandidates(candidatesData?.data || []);
+  }
+
+  useEffect(() => {
+    getCandidates();
+  }, []);
+
 
   return (
     <div>
-      <Table columns={columns} dataSource={data} onChange={onChange} />
+      <Table columns={columns} dataSource={candidates} onChange={onChange} />
     </div>
   )
 }
