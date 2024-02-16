@@ -9,7 +9,7 @@ export default function PageHeader({ text, withCreateCandidate = false }: {
   const navigate = useNavigate();
 
   const goToCreateCandidate = () => {
-    navigate('/create-candidate');
+    navigate('/candidate');
   }
   return (
     <div style={{

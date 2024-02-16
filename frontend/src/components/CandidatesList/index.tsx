@@ -2,8 +2,10 @@ import { EllipsisOutlined } from "@ant-design/icons";
 import { Dropdown, MenuProps, Table, TableColumnsType, TableProps } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CandidatesList() {
+  const navigate = useNavigate();
   interface DataType {
     name: string,
     phone: string,
@@ -19,28 +21,6 @@ export default function CandidatesList() {
 
   const [candidates, setCandidates] = useState([]);
 
-  const data = [
-    {
-      id: 1,
-      name: 'John',
-      phone: '595-595-959',
-      disposition: 'Rejected',
-      hire_type: 'External',
-      fee: 300,
-      created_at_candidate: '16 of august, 2031',
-      created_at_disposition: '12 of august, 2031',
-    },
-    {
-      id: 2,
-      name: 'Jack',
-      phone: '595-595-959',
-      disposition: 'Rejected',
-      hire_type: 'External',
-      fee: 300,
-      created_at_candidate: '16 of august, 2031',
-      created_at_disposition: '12 of august, 2031',
-    }
-  ]
   const columns: TableColumnsType<DataType> = [
     { dataIndex: 'name', title: 'Candidate' },
     { dataIndex: 'phone', title: 'Phone' },
@@ -97,7 +77,10 @@ export default function CandidatesList() {
   };
 
   const onClickMenu: MenuProps['onClick'] = ({ key }) => {
-    alert(`${key} para ${selectedRow?.id}`);
+    switch (key) {
+      case 'edit': 
+        navigate(`/candidate/${selectedRow?.id}`)
+    }
   }
 
   const getCandidates = async() => {

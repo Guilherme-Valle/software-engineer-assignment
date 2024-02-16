@@ -10,7 +10,7 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={<Home />} />
-      <Route path='/create-candidate' element={<Candidate />} />
+      <Route path='/candidate/:id?' element={<Candidate />} />
       <Route path='*' element={<Home />} />
     </Routes>
   );
