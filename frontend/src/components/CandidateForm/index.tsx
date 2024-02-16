@@ -1,5 +1,4 @@
 import { Button, Form } from "react-bootstrap";
-import { SubmitHandler, useForm } from "react-hook-form";
 import RequiredSpan from "../RequiredSpan";
 import { FormEvent, useEffect, useState } from "react";
 import axios from "axios";
@@ -14,21 +13,23 @@ export default function CandidateForm() {
 
   let candidateAction = 'Create';
   if (id) {
-    candidateAction = 'Update';
+    candidateAction = 'Edit';
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
- 
+
+      const candidateObject = {
+        name, email, phone
+      };
+
       if (id) {
-        await axios.put(`http://localhost/api/candidate/${id}`, {
-          name, email, phone
-        });
+        await axios.put(`http://localhost/api/candidate/${id}`,
+          candidateObject);
       } else {
-        await axios.post('http://localhost/api/candidate/', {
-          name, email, phone
-        });  
+        await axios.post('http://localhost/api/candidate/',
+          candidateObject);
       }
 
       navigate('/');
@@ -64,16 +65,19 @@ export default function CandidateForm() {
         <Form.Control value={name} onChange={(e) => setName(e.target.value)}
           type="text" placeholder="Full name" required />
       </Form.Group>
+
       <Form.Group className="mb-3" controlId="emailCandidate">
         <Form.Label>Email <RequiredSpan /></Form.Label>
         <Form.Control value={email} onChange={(e) => setEmail(e.target.value)}
           type="email" placeholder="name@email.com" required />
       </Form.Group>
+
       <Form.Group className="mb-3" controlId="phoneCandidate">
         <Form.Label>Phone</Form.Label>
         <Form.Control value={phone} onChange={(e) => setPhone(e.target.value)}
           type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="xxx-xxx-xxxx" />
       </Form.Group>
+
       <Button variant="secondary" type="submit">
         {candidateAction} candidate
       </Button>

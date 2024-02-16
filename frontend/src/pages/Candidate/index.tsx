@@ -9,7 +9,7 @@ export default function Candidate() {
 
   return (
     <>
-      <PageHeader text={`${id ? 'Update' : 'Create'} candidate`} />
+      <PageHeader text={`${id ? 'Edit' : 'Create'} candidate`} />
       <PageBody>
         <ContentCard>
           <h3>Candidate information</h3>

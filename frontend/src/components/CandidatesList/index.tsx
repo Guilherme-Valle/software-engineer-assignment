@@ -14,7 +14,8 @@ export default function CandidatesList() {
     fee: number,
     created_at_candidate: string,
     created_at_disposition: string,
-    id: number
+    id: number,
+    disposition_id: number
   }
 
   const [selectedRow, setSelectedRow] = useState<DataType | null>(null);
@@ -79,7 +80,9 @@ export default function CandidatesList() {
   const onClickMenu: MenuProps['onClick'] = ({ key }) => {
     switch (key) {
       case 'edit': 
-        navigate(`/candidate/${selectedRow?.id}`)
+        return navigate(`/candidate/${selectedRow?.id}`)
+      case 'set-disposition':
+        return navigate(`/disposition/${selectedRow?.disposition_id}`)
     }
   }
 
