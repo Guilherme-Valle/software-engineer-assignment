@@ -3,9 +3,21 @@ import { Dropdown, MenuProps, Table, TableColumnsType, TableProps } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DeleteModal from "../DeleteModal";
 
 export default function CandidatesList() {
   const navigate = useNavigate();
+
+  const [isOpenDeleteModal, setIsOpenDeleteModal] =
+    useState(false);
+
+  const closeDeleteModal = () => setIsOpenDeleteModal(false);
+
+  const deleteCandidate = async () => {
+    await axios.delete(`http://localhost/api/candidate/${selectedRow?.id}`);
+    closeDeleteModal();
+    getCandidates();
+  }
   interface DataType {
     name: string,
     phone: string,
@@ -34,16 +46,16 @@ export default function CandidatesList() {
       key: 'action',
       title: <EllipsisOutlined />,
       render: (_, record) => {
-        return <Dropdown 
-        onOpenChange={(open) => {
-          if (open) {
-            setSelectedRow(record);
-          }
-        }}
-        menu={{
-          items: candidateActions,
-          onClick: onClickMenu
-        }} placement="bottom" trigger={['click']}>
+        return <Dropdown
+          onOpenChange={(open) => {
+            if (open) {
+              setSelectedRow(record);
+            }
+          }}
+          menu={{
+            items: candidateActions,
+            onClick: onClickMenu
+          }} placement="bottom" trigger={['click']}>
           <EllipsisOutlined style={{ cursor: 'pointer' }} />
         </Dropdown>
       }
@@ -71,7 +83,7 @@ export default function CandidatesList() {
     },
   ]
 
-  
+
 
   const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
@@ -79,14 +91,16 @@ export default function CandidatesList() {
 
   const onClickMenu: MenuProps['onClick'] = ({ key }) => {
     switch (key) {
-      case 'edit': 
-        return navigate(`/candidate/${selectedRow?.id}`)
+      case 'edit':
+        return navigate(`/candidate/${selectedRow?.id}`);
       case 'set-disposition':
-        return navigate(`/disposition/${selectedRow?.disposition_id}`)
+        return navigate(`/disposition/${selectedRow?.disposition_id}`);
+      case 'delete':
+        setIsOpenDeleteModal(true);
     }
   }
 
-  const getCandidates = async() => {
+  const getCandidates = async () => {
     const candidatesResponse = await axios.get('http://localhost/api/candidate/');
     const candidatesData = candidatesResponse.data;
     setCandidates(candidatesData?.data || []);
@@ -98,8 +112,10 @@ export default function CandidatesList() {
 
 
   return (
-    <div>
+    <>
       <Table columns={columns} dataSource={candidates} onChange={onChange} />
-    </div>
+      <DeleteModal isOpen={isOpenDeleteModal}
+        closeModal={closeDeleteModal} handleDelete={deleteCandidate} />
+    </>
   )
 }
