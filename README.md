@@ -38,6 +38,7 @@ The secondary model `Disposition` is related to the `Candidate` model and has th
   - Run the commands `sudo chmod +x ./run-migrations.sh ./up-sails.sh ./install-deps.sh`
   - Ensure that your `80`, `3306` and `3000` ports are available.
   - Run the command `make up`, and it will setup the docker containers.
+  - Run the command `cd backend && ./vendor/bin/sail artisan migrate`
   - Access `localhost:3000`
   - If you want to stop the containers, just run `make down`
 
