@@ -1,8 +1,5 @@
 up:
-	if [ ! -f "backend/.env" ]; then \
-		cp "backend/.env.example" "backend/.env"; \
-		echo "Created .env file based on .env.example"; \
-	fi
+	./install-deps.sh
 	cd backend && docker-compose up
 	cd frontend && docker build . -t sparkhire-frontend && docker run --name sparkhire-react-front -p 3000:3000 -d sparkhire-frontend
 down:
