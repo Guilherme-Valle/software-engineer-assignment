@@ -9,8 +9,8 @@ import { currencies } from "../../utils/currencies";
 export default function DispositionForm() {
   const { id } = useParams();
   const [disposition, setDisposition] = useState('rejected');
-  const [hireType, setHireType] = useState<string | null>(null);
-  const [rejectionReason, setRejectionReason] = useState<string>('');
+  const [hireType, setHireType] = useState<string>('internal');
+  const [rejectionReason, setRejectionReason] = useState<string>('Other');
   const [fee, setFee] = useState<string>('0');
   const [currency, setCurrency] = useState<string>('USD');
   const navigate = useNavigate();

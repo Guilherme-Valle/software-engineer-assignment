@@ -20,6 +20,7 @@ export default function CandidatesList() {
   }
   interface DataType {
     name: string,
+    email: string,
     phone: string,
     disposition: string,
     hire_type: string,
@@ -35,11 +36,30 @@ export default function CandidatesList() {
   const [candidates, setCandidates] = useState([]);
 
   const columns: TableColumnsType<DataType> = [
-    { dataIndex: 'name', title: 'Candidate' },
+    {
+      dataIndex: 'name', key: 'name',
+      title: 'Candidate', render: (_, record) => {
+        return <div className="flex">
+          <img src={`assets/users-${(record.id % 4) + 1}.png`} className="mr-2" />
+          <div className="flex flex-column">
+            <span>
+              <b>
+                {record.name}
+              </b>
+            </span>
+            <span>
+              {record.email}
+            </span>
+          </div>
+        </div>
+      }
+    },
     { dataIndex: 'phone', title: 'Phone' },
     { dataIndex: 'disposition', title: 'Disposition' },
     { dataIndex: 'hire_type', title: 'Hire Type' },
-    { dataIndex: 'fee', title: 'Fee' },
+    { dataIndex: 'fee', title: 'Fee', render: (_, record) => {
+      return record.fee ? `$ ${record.fee}` : ''
+    } },
     { dataIndex: 'created_at_candidate', title: 'Candidate created' },
     { dataIndex: 'created_at_disposition', title: 'Disposition created' },
     {
@@ -55,7 +75,7 @@ export default function CandidatesList() {
           menu={{
             items: candidateActions,
             onClick: onClickMenu
-          }} placement="bottom" trigger={['click']}>
+          }} placement="bottomRight" trigger={['click']}>
           <EllipsisOutlined style={{ cursor: 'pointer' }} />
         </Dropdown>
       }
@@ -96,7 +116,7 @@ export default function CandidatesList() {
       case 'set-disposition':
         return navigate(`/disposition/${selectedRow?.disposition_id}`);
       case 'delete':
-        setIsOpenDeleteModal(true);
+        return setIsOpenDeleteModal(true);
     }
   }
 
@@ -115,7 +135,8 @@ export default function CandidatesList() {
     <>
       <Table columns={columns} dataSource={candidates} onChange={onChange} />
       <DeleteModal isOpen={isOpenDeleteModal}
-        closeModal={closeDeleteModal} handleDelete={deleteCandidate} />
+        closeModal={closeDeleteModal}
+        handleDelete={deleteCandidate} />
     </>
   )
 }

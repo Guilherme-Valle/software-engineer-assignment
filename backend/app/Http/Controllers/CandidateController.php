@@ -23,15 +23,14 @@ class CandidateController extends Controller
     )
       ->select(
         'candidates.*',
-        'candidates.created_at as created_at_candidate',
+        DB::raw('DATE_FORMAT(candidates.created_at, "%M %e, %Y, at %h:%i %p") AS created_at_candidate'),
         'dp.id as disposition_id',
         'dp.disposition',
         'dp.hire_type',
         'dp.fee',
         'dp.currency',
         'dp.rejection_reason',
-        'dp.created_at as created_at_disposition'
-      )
+        DB::raw('DATE_FORMAT(dp.created_at, "%M %e, %Y, at %h:%i %p") AS created_at_disposition'),      )
       ->paginate(15);
 
     return response($candidates, 200);

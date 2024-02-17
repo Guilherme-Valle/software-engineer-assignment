@@ -1,4 +1,3 @@
-import { SetStateAction } from "react";
 import { Button, Modal } from "react-bootstrap";
 
 export default function DeleteModal({ isOpen, closeModal, handleDelete }: {
