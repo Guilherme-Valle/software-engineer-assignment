@@ -36,7 +36,25 @@ export default function DispositionForm() {
     try {
       const disposition = await axios.get(`http://localhost/api/disposition/${id}`);
       if (disposition && disposition.data) {
-        console.log('disposition', disposition.data);
+        const dispositionData = disposition.data;
+
+        setDisposition(dispositionData.disposition);
+        
+        if (dispositionData.hire_type) {
+          setHireType(dispositionData.hire_type);
+        }
+
+        if (dispositionData.rejection_reason) {
+          setRejectionReason(dispositionData.rejection_reason)
+        }
+        
+        if (dispositionData.fee) {
+          setFee(dispositionData.fee);
+        }
+
+        if (dispositionData.currency) {
+          setCurrency(dispositionData.currency);
+        }
       }
     } catch {
 
