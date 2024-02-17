@@ -34,7 +34,11 @@ The secondary model `Disposition` is related to the `Candidate` model and has th
 
 ## Running the code
 
-*This section should be updated with the required instructions to run your project*.
+ - You should have be the `make` package installed on your local environment (in Linux, just run `sudo apt update && sudo apt install make`), as long with `docker`.
+  - Ensure that your `80` and `3000` ports are available.
+  - Run the command `make up`, and it will setup the docker containers.
+  - Access `localhost:3000`
+  - If you want to stop the containers, just run `make down`
 
 
 ## Assignment tasks
