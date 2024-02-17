@@ -3,14 +3,16 @@ import RequiredSpan from "../RequiredSpan";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { rejectionReasons } from "../../utils/rejection_reasons";
+import { currencies } from "../../utils/currencies";
 
 export default function DispositionForm() {
   const { id } = useParams();
   const [disposition, setDisposition] = useState('rejected');
   const [hireType, setHireType] = useState<string | null>(null);
-  const [rejectionReason, setRejectionReason] = useState<string | null>(null);
-  const [fee, setFee] = useState<string | null>(null);
-  const [currency, setCurrency] = useState<string | null>(null);
+  const [rejectionReason, setRejectionReason] = useState<string>('');
+  const [fee, setFee] = useState<string>('0');
+  const [currency, setCurrency] = useState<string>('USD');
   const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -76,6 +78,7 @@ export default function DispositionForm() {
           checked={disposition === 'rejected'} inline
           onChange={handleDispositionChange} required />
       </Form.Group>
+
       {disposition === 'hired' && <Form.Group className="mb-3" controlId="hireType">
         <label>
           Is the candidate being hired internally or externally?
@@ -93,6 +96,34 @@ export default function DispositionForm() {
           checked={hireType === 'external'} inline
           onChange={handleHireTypeChange} required />
       </Form.Group>}
+
+      {disposition === 'rejected' &&
+        <Form.Group className="mb-3" controlId="rejectReason">
+          <label>What is the reason for rejection?</label>
+          <Form.Select value={rejectionReason}
+            onChange={(e) => setRejectionReason(e.target.value)}>
+            {rejectionReasons
+              .map(reason => <option value={reason}>{reason}</option>)}
+          </Form.Select>
+        </Form.Group>
+      }
+
+      {disposition === 'hired' && hireType === 'external' &&
+        <Form.Group className="mb-3 flex flex-col" controlId="fee">
+          <label>Placement fee earned (optional)</label>
+          <div className="flex flex-row">
+            <Form.Control value={fee} type="number" className="!w-5/6"
+              placeholder="$0.00" step=".01"
+              onChange={(e) => setFee(e.target.value)} />
+            <Form.Select value={currency} className="!w-1/6"
+              onChange={(e) => setCurrency(e.target.value)}>
+              {currencies
+                .map(currencyOpt => <option value={currencyOpt}>{currencyOpt}</option>)}
+            </Form.Select>
+          </div>
+        </Form.Group>
+      }
+
 
       <Button variant="secondary" type="submit">
         Save disposition
