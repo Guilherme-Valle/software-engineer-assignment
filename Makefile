@@ -1,4 +1,8 @@
 up:
+	if [ ! -f "backend/.env" ]; then \
+		cp "backend/.env.example" "backend/.env"; \
+		echo "Created .env file based on .env.example"; \
+	fi
 	./install-deps.sh
 	cd backend && ./vendor/bin/sail up -d
 	cd backend && ./vendor/bin/sail artisan migrate
