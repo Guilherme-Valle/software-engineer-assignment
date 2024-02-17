@@ -1,0 +1,1 @@
+cd backend && ./vendor/bin/sail up -d
